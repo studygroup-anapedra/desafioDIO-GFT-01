@@ -1,7 +1,11 @@
 package org.anapedra.schoolaertesaber.dtos;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotEmpty;
 import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.entities.enums.RegistrationType;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -12,9 +16,13 @@ public class RegistrationDTO implements Serializable {
     private static final long serialVersionUID=1L;
 
     private Long id;
+    @Enumerated(EnumType.STRING)
     private RegistrationType registrationType;
     private String firstName;
     private String lastName;
+
+    @NotEmpty
+    @CPF
     private String cpf;
     private String getRegistrationEmail;
     private LocalDate dateBirth;
@@ -27,8 +35,8 @@ public class RegistrationDTO implements Serializable {
     public RegistrationDTO() {
     }
 
-    public RegistrationDTO(Long id, RegistrationType registrationType, String firstName, String lastName, String cpf, String getRegistrationEmail,
-                           LocalDate dateBirth, String registrationPhone, String profession, String imgUrl) {
+    public RegistrationDTO(Long id, RegistrationType registrationType, String firstName, String lastName, String cpf,
+                           String getRegistrationEmail, LocalDate dateBirth, String registrationPhone, String profession, String imgUrl) {
         this.id = id;
         this.registrationType = registrationType;
         this.firstName = firstName;
@@ -43,7 +51,7 @@ public class RegistrationDTO implements Serializable {
 
     public RegistrationDTO(Registration entity) {
         id = entity.getId();
-        registrationType = entity.getRegistrationType();
+        registrationType =(registrationType == null) ? RegistrationType.EMPLOYEE_REGISTRATION : entity.getRegistrationType();
         firstName = entity.getFirstName();
         lastName = entity.getLastName();
         cpf = entity.getCpf();

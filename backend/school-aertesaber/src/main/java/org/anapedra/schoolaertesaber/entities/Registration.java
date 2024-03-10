@@ -19,6 +19,7 @@ public class Registration implements Serializable {
     private Integer registrationType;
     private String firstName;
     private String lastName;
+    @Column(nullable = false, unique = true)
     private String cpf;
     private String getRegistrationEmail;
     private LocalDate dateBirth;
