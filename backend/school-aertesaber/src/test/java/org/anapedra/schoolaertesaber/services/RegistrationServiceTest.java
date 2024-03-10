@@ -1,5 +1,6 @@
 package org.anapedra.schoolaertesaber.services;
 
+import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.factories.RegistrationFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
