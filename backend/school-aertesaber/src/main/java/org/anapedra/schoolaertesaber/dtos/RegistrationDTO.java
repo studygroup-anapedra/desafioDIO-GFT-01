@@ -1,8 +1,7 @@
 package org.anapedra.schoolaertesaber.dtos;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import org.anapedra.schoolaertesaber.entities.Registration;
+import org.anapedra.schoolaertesaber.entities.enums.RegistrationType;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -13,7 +12,7 @@ public class RegistrationDTO implements Serializable {
     private static final long serialVersionUID=1L;
 
     private Long id;
-    private Integer registrationType;
+    private RegistrationType registrationType;
     private String firstName;
     private String lastName;
     private String cpf;
@@ -23,12 +22,12 @@ public class RegistrationDTO implements Serializable {
     private String profession;
     private String imgUrl;
     private Instant registrationAt;
-    private Instant updateAt;
+
 
     public RegistrationDTO() {
     }
 
-    public RegistrationDTO(Long id, Integer registrationType, String firstName, String lastName, String cpf, String getRegistrationEmail,
+    public RegistrationDTO(Long id, RegistrationType registrationType, String firstName, String lastName, String cpf, String getRegistrationEmail,
                            LocalDate dateBirth, String registrationPhone, String profession, String imgUrl) {
         this.id = id;
         this.registrationType = registrationType;
@@ -42,6 +41,22 @@ public class RegistrationDTO implements Serializable {
         this.imgUrl = imgUrl;
     }
 
+    public RegistrationDTO(Registration entity) {
+        id = entity.getId();
+        registrationType = entity.getRegistrationType();
+        firstName = entity.getFirstName();
+        lastName = entity.getLastName();
+        cpf = entity.getCpf();
+        getRegistrationEmail = entity.getGetRegistrationEmail();
+        dateBirth = entity.getDateBirth();
+        registrationPhone = entity.getRegistrationPhone();
+        profession = entity.getProfession();
+        imgUrl = entity.getImgUrl();
+        registrationAt=Instant.now();
+
+
+    }
+
     public Long getId() {
         return id;
     }
@@ -50,11 +65,11 @@ public class RegistrationDTO implements Serializable {
         this.id = id;
     }
 
-    public Integer getRegistrationType() {
+    public RegistrationType getRegistrationType() {
         return registrationType;
     }
 
-    public void setRegistrationType(Integer registrationType) {
+    public void setRegistrationType(RegistrationType registrationType) {
         this.registrationType = registrationType;
     }
 
@@ -120,6 +135,10 @@ public class RegistrationDTO implements Serializable {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public Instant getRegistrationAt() {
+        return registrationAt;
     }
 
     @Override
