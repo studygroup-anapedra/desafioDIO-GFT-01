@@ -2,12 +2,19 @@ package org.anapedra.schoolaertesaber.services;
 
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
 import org.anapedra.schoolaertesaber.entities.Registration;
+import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RegistrationService {
 
+    private final RegistrationRepository repository;
+
+    public RegistrationService(RegistrationRepository repository) {
+        this.repository = repository;
+    }
 
     @Transactional
     public RegistrationDTO insert(RegistrationDTO dto) {
