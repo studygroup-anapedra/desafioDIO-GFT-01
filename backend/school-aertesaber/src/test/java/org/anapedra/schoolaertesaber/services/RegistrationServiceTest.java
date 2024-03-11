@@ -15,6 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
@@ -126,6 +130,17 @@ public class RegistrationServiceTest {
 
 
 
+    @Test
+    public void findAllShouldReturnPagedProductMinDTO() {
+
+        Pageable pageable = PageRequest.of(0, 12);
+
+        Page<RegistrationMinDTO> result = service.findAll(registrationName, pageable);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getSize(), 1);
+        Assertions.assertEquals(result.iterator().next().getFirstName(), registrationName);
+    }
 
 
 }
