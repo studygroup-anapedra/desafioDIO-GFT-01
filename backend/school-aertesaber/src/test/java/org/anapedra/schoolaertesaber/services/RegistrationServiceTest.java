@@ -66,7 +66,30 @@ public class RegistrationServiceTest {
 
         Mockito.verify(repository, times(0)).findByCpf(registrationDTO.getCpf());
 
+
+
+
+
     }
+
+
+    @Test
+    public void findByCpfShouldReturnRegistrationWhenExistingCpf() {
+        Registration registrationPeople =new Registration();
+        RegistrationDTO registrationDTO = RegistrationFactory.createRegistrationDTO();
+        Mockito.when(repository.findById(registrationDTO.getId())).thenReturn(Optional.of(registrationPeople));
+
+        Optional<RegistrationDTO> result = Optional.ofNullable(service.findById(registrationDTO.getId()));
+
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertNotNull(result);
+        assertEquals( "Ana", registrationDTO.getFirstName());
+        assertEquals("785.925.970-21",registrationDTO.getCpf());
+        assertEquals( "anasantana@gmail.com", registrationDTO.getRegistrationEmail());
+
+        Mockito.verify(repository, times(1)).findById(registrationDTO.getId());
+    }
+
 
 
 
