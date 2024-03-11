@@ -1,8 +1,7 @@
 package org.anapedra.schoolaertesaber.dtos;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
+import org.anapedra.schoolaertesaber.entities.Phone;
 import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.entities.enums.RegistrationType;
 import org.hibernate.validator.constraints.br.CPF;
@@ -10,7 +9,10 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class RegistrationDTO implements Serializable {
     private static final long serialVersionUID=1L;
@@ -30,6 +32,8 @@ public class RegistrationDTO implements Serializable {
     private String profession;
     private String imgUrl;
     private Instant registrationAt;
+
+    private List<PhoneDTO> phones =new ArrayList<>();
 
 
     public RegistrationDTO() {
@@ -51,7 +55,7 @@ public class RegistrationDTO implements Serializable {
 
     public RegistrationDTO(Registration entity) {
         id = entity.getId();
-        registrationType =(registrationType == null) ? RegistrationType.EMPLOYEE_REGISTRATION : entity.getRegistrationType();
+        registrationType =(registrationType == null) ? null: entity.getRegistrationType();
         firstName = entity.getFirstName();
         lastName = entity.getLastName();
         cpf = entity.getCpf();
@@ -64,6 +68,16 @@ public class RegistrationDTO implements Serializable {
 
 
     }
+
+
+
+    public RegistrationDTO(Registration entity, Set<Phone> phoness){
+        this(entity);
+        entity.getPhones().forEach(phone -> this.phones.add(new PhoneDTO(phone)));
+
+    }
+
+
 
     public Long getId() {
         return id;
@@ -147,6 +161,14 @@ public class RegistrationDTO implements Serializable {
 
     public Instant getRegistrationAt() {
         return registrationAt;
+    }
+
+    public List<PhoneDTO> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<PhoneDTO> phones) {
+        this.phones = phones;
     }
 
     @Override

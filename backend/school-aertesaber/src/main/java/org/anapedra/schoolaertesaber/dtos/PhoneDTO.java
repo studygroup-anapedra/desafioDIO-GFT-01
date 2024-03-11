@@ -16,24 +16,24 @@ public class PhoneDTO implements Serializable {
     private String number;
     private PhoneType phoneType;
 
-    private Long registrationId;
+
 
     public PhoneDTO() {
 
     }
 
-    public PhoneDTO(Long id, String number, PhoneType phoneType, Long registrationId) {
+    public PhoneDTO(Long id, String number, PhoneType phoneType) {
         this.id = id;
         this.number = number;
         this.phoneType = phoneType;
-        this.registrationId = registrationId;
+
     }
 
     public PhoneDTO(Phone entity) {
         id = entity.getId();
         number = entity.getNumber();
         phoneType = (entity.getPhoneType() == null) ? PhoneType.PERSONAL_PHONE : entity.getPhoneType();
-        registrationId = entity.getRegistration().getId();
+
     }
 
     public Long getId() {
@@ -60,11 +60,4 @@ public class PhoneDTO implements Serializable {
         this.phoneType = phoneType;
     }
 
-    public Long getRegistrationId() {
-        return registrationId;
-    }
-
-    public void setRegistrationId(Long registrationId) {
-        this.registrationId = registrationId;
-    }
 }

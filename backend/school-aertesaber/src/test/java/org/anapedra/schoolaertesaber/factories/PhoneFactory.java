@@ -1,17 +1,16 @@
 package org.anapedra.schoolaertesaber.factories;
 
 
-import org.anapedra.schoolaertesaber.entities.Registration;
+import org.anapedra.schoolaertesaber.dtos.PhoneDTO;
+import org.anapedra.schoolaertesaber.entities.Phone;
+import org.anapedra.schoolaertesaber.entities.enums.PhoneType;
 
 public class PhoneFactory {
 
 
 
     public static Phone createPhone() {
-        Registration registration=RegistrationFactory.createRegistration();
-        Long registrationID =registration.getId();
-        Phone phone = new Phone(1L, "35264789",PhoneType.WORK,registrationID);
-        return phone;
+        return new Phone(1L, "35264789", PhoneType.WORK_PHONE);
     }
 
 

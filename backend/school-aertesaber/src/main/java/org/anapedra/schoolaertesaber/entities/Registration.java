@@ -6,7 +6,9 @@ import org.anapedra.schoolaertesaber.entities.enums.RegistrationType;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
@@ -28,6 +30,9 @@ public class Registration implements Serializable {
     private String imgUrl;
     private Instant registrationAt;
     private Instant updateAt;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private Set<Phone>phones=new HashSet<>();
 
     public Registration() {
     }
@@ -141,6 +146,10 @@ public class Registration implements Serializable {
 
     public void setUpdateAt(Instant updateAt) {
         this.updateAt = updateAt;
+    }
+
+    public Set<Phone> getPhones() {
+        return phones;
     }
 
     @Override

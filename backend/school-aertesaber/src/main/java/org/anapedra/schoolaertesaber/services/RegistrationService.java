@@ -1,7 +1,10 @@
 package org.anapedra.schoolaertesaber.services;
 
+import org.anapedra.schoolaertesaber.dtos.PhoneDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
+import org.anapedra.schoolaertesaber.entities.Phone;
 import org.anapedra.schoolaertesaber.entities.Registration;
+import org.anapedra.schoolaertesaber.reposirories.PhoneRepository;
 import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
 import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,9 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegistrationService {
 
     private final RegistrationRepository repository;
+    private final PhoneRepository phoneRepository;
 
-    public RegistrationService(RegistrationRepository repository) {
+    public RegistrationService(RegistrationRepository repository, PhoneRepository phoneRepository) {
         this.repository = repository;
+        this.phoneRepository = phoneRepository;
     }
 
     @Transactional
@@ -47,6 +52,13 @@ public class RegistrationService {
         entity.setRegistrationPhone(dto.getRegistrationPhone());
         entity.setProfession(dto.getProfession());
         entity.setImgUrl(dto.getImgUrl());
+
+
+        entity.getPhones().clear();
+        for (PhoneDTO phoneDto : dto.getPhones()) {
+            Phone phone = phoneRepository.getOne(phoneDto.getId());
+            entity.getPhones().add(phone);
+        }
 
 
 

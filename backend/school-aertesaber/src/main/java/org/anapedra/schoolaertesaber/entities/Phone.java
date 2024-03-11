@@ -18,18 +18,15 @@ public class Phone implements Serializable {
     private Long id;
     private String number;
     private Integer phoneType;
-    @ManyToOne
-    @JoinColumn(name = "registrationId")
-    private Registration registration;
 
 
 
     public Phone() {
     }
-    public Phone(Long id, String number, PhoneType phoneType,Registration registration) {
+    public Phone(Long id, String number, PhoneType phoneType) {
         this.id = id;
         this.number = number;
-        this.registration=registration;
+
         setPhoneType(phoneType);
     }
 
@@ -53,14 +50,6 @@ public class Phone implements Serializable {
         return PhoneType.valueOf(phoneType);
     }
 
-
-    public Registration getRegistration() {
-        return registration;
-    }
-
-    public void setRegistration(Registration registration) {
-        this.registration = registration;
-    }
 
     public void setPhoneType(PhoneType phoneType) {
         if (phoneType != null){
