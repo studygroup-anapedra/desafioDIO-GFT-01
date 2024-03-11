@@ -7,9 +7,12 @@ import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.reposirories.PhoneRepository;
 import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
 import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
+import org.anapedra.schoolaertesaber.services.exceptions.ResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class RegistrationService {
@@ -21,6 +24,27 @@ public class RegistrationService {
         this.repository = repository;
         this.phoneRepository = phoneRepository;
     }
+
+
+    @Transactional(readOnly = true)
+    public RegistrationDTO findByCpf(String cpf) {
+        Optional<Registration> obj = repository.findByCpf(cpf);
+        Registration entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+        return new RegistrationDTO(entity);
+
+
+    }
+
+
+
+    @Transactional(readOnly = true)
+    public RegistrationDTO findById(long id) {
+        Optional<Registration> obj = repository.findById(id);
+        Registration entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+        return new RegistrationDTO(entity);
+    }
+
+
 
     @Transactional
     public RegistrationDTO insert(RegistrationDTO dto) {

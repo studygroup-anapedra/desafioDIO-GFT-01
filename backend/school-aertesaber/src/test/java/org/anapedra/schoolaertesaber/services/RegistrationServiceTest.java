@@ -6,6 +6,7 @@ import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.factories.RegistrationFactory;
 import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
 import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
+import org.anapedra.schoolaertesaber.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,12 +84,46 @@ public class RegistrationServiceTest {
 
         Assertions.assertTrue(result.isPresent());
         Assertions.assertNotNull(result);
-        assertEquals( "Ana", registrationDTO.getFirstName());
+        assertEquals( "Ana Lucia", registrationDTO.getFirstName());
         assertEquals("785.925.970-21",registrationDTO.getCpf());
-        assertEquals( "anasantana@gmail.com", registrationDTO.getRegistrationEmail());
+        assertEquals( "ana@gmail.com", registrationDTO.getRegistrationEmail());
 
         Mockito.verify(repository, times(1)).findById(registrationDTO.getId());
     }
+
+
+    @Test
+    public void findByCpfThrowResourceNotFindExceptionWhenDoesNotExistingCpf() throws Exception{
+
+
+        RegistrationDTO registrationDTO = RegistrationFactory.createRegistrationDTO();
+        registrationDTO.setCpf("623.662.420-85");
+        Mockito.when(repository.getById(registrationDTO.getId())).thenThrow(ResourceNotFoundException.class);
+
+        Assertions.assertThrows(ResourceNotFoundException.class,() -> {
+            service.findByCpf(registrationDTO.getCpf());
+        });
+
+        Mockito.verify(repository, times(1)).findByCpf(registrationDTO.getCpf());//@@
+
+    }
+
+
+    @Test
+    public void findBIdThrowResourceNotFindExceptionWhenDoesNotExistingId() throws Exception{
+
+
+        RegistrationDTO registrationDTO = RegistrationFactory.createRegistrationDTO();
+        registrationDTO.setId(100L);
+
+        Assertions.assertThrows(ResourceNotFoundException.class,() -> {
+            service.findById(registrationDTO.getId());
+        });
+
+        Mockito.verify(repository, times(1)).findById(registrationDTO.getId());//@@
+
+    }
+
 
 
 

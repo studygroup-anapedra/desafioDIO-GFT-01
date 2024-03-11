@@ -3,10 +3,7 @@ package org.anapedra.schoolaertesaber.resources;
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
 import org.anapedra.schoolaertesaber.services.RegistrationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -19,6 +16,23 @@ public class RegistrationResource {
     public RegistrationResource(RegistrationService service) {
         this.service = service;
     }
+
+
+
+
+    @GetMapping("/{cpf}")
+    public ResponseEntity<RegistrationDTO> findByCpf(@PathVariable String cpf) {
+        RegistrationDTO dto = service.findByCpf(cpf);
+        return ResponseEntity.ok().body(dto);
+    }
+
+
+    @GetMapping(value = "/uni/{id}")
+    public ResponseEntity<RegistrationDTO> findById(@PathVariable Long id) {
+        RegistrationDTO dto = service.findById(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
 
 
     @PostMapping
