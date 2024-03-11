@@ -16,7 +16,7 @@ public class RegistrationDTO implements Serializable {
     private static final long serialVersionUID=1L;
 
     private Long id;
-    @Enumerated(EnumType.STRING)
+
     private RegistrationType registrationType;
     private String firstName;
     private String lastName;
@@ -24,7 +24,7 @@ public class RegistrationDTO implements Serializable {
     @NotEmpty
     @CPF
     private String cpf;
-    private String getRegistrationEmail;
+    private String registrationEmail;
     private LocalDate dateBirth;
     private String registrationPhone;
     private String profession;
@@ -36,13 +36,13 @@ public class RegistrationDTO implements Serializable {
     }
 
     public RegistrationDTO(Long id, RegistrationType registrationType, String firstName, String lastName, String cpf,
-                           String getRegistrationEmail, LocalDate dateBirth, String registrationPhone, String profession, String imgUrl) {
+                           String registrationEmail, LocalDate dateBirth, String registrationPhone, String profession, String imgUrl) {
         this.id = id;
         this.registrationType = registrationType;
         this.firstName = firstName;
         this.lastName = lastName;
         this.cpf = cpf;
-        this.getRegistrationEmail = getRegistrationEmail;
+        this.registrationEmail = registrationEmail;
         this.dateBirth = dateBirth;
         this.registrationPhone = registrationPhone;
         this.profession = profession;
@@ -55,7 +55,7 @@ public class RegistrationDTO implements Serializable {
         firstName = entity.getFirstName();
         lastName = entity.getLastName();
         cpf = entity.getCpf();
-        getRegistrationEmail = entity.getGetRegistrationEmail();
+        registrationEmail = entity.getRegistrationEmail();
         dateBirth = entity.getDateBirth();
         registrationPhone = entity.getRegistrationPhone();
         profession = entity.getProfession();
@@ -105,12 +105,12 @@ public class RegistrationDTO implements Serializable {
         this.cpf = cpf;
     }
 
-    public String getGetRegistrationEmail() {
-        return getRegistrationEmail;
+    public String getRegistrationEmail() {
+        return registrationEmail;
     }
 
-    public void setGetRegistrationEmail(String getRegistrationEmail) {
-        this.getRegistrationEmail = getRegistrationEmail;
+    public void setRegistrationEmail(String registrationEmail) {
+        this.registrationEmail = registrationEmail;
     }
 
     public LocalDate getDateBirth() {

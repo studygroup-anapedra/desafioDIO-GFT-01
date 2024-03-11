@@ -3,6 +3,7 @@ package org.anapedra.schoolaertesaber.services;
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
 import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
+import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public class RegistrationService {
 
         }
         catch (DataIntegrityViolationException e) {
-            throw new DataBaseException("Integrity violation!");
+            throw new DataBaseException("Integrity violation: CPF já existe no sistema!");
         }
 
     }
@@ -41,7 +42,7 @@ public class RegistrationService {
         entity.setFirstName(dto.getFirstName());
         entity.setLastName(dto.getLastName());
         entity.setCpf(dto.getCpf());
-        entity.setGetRegistrationEmail(dto.getGetRegistrationEmail());
+        entity.setRegistrationEmail(dto.getRegistrationEmail());
         entity.setDateBirth(dto.getDateBirth());
         entity.setRegistrationPhone(dto.getRegistrationPhone());
         entity.setProfession(dto.getProfession());

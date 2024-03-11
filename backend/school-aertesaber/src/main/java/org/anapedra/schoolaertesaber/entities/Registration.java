@@ -21,7 +21,7 @@ public class Registration implements Serializable {
     private String lastName;
     @Column(nullable = false, unique = true)
     private String cpf;
-    private String getRegistrationEmail;
+    private String registrationEmail;
     private LocalDate dateBirth;
     private String registrationPhone;
     private String profession;
@@ -32,14 +32,14 @@ public class Registration implements Serializable {
     public Registration() {
     }
 
-    public Registration(Long id, RegistrationType registrationType, String firstName, String lastName, String cpf, String getRegistrationEmail,
+    public Registration(Long id, RegistrationType registrationType, String firstName, String lastName, String cpf, String registrationEmail,
                         LocalDate dateBirth, String registrationPhone, String profession, String imgUrl) {
         this.id = id;
         setRegistrationType(registrationType);
         this.firstName = firstName;
         this.lastName = lastName;
         this.cpf = cpf;
-        this.getRegistrationEmail = getRegistrationEmail;
+        this.registrationEmail = registrationEmail;
         this.dateBirth = dateBirth;
         this.registrationPhone = registrationPhone;
         this.profession = profession;
@@ -87,12 +87,12 @@ public class Registration implements Serializable {
         this.cpf = cpf;
     }
 
-    public String getGetRegistrationEmail() {
-        return getRegistrationEmail;
+    public String getRegistrationEmail() {
+        return registrationEmail;
     }
 
-    public void setGetRegistrationEmail(String getRegistrationEmail) {
-        this.getRegistrationEmail = getRegistrationEmail;
+    public void setRegistrationEmail(String registrationEmail) {
+        this.registrationEmail = registrationEmail;
     }
 
     public LocalDate getDateBirth() {
