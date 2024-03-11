@@ -24,6 +24,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 public class RegistrationServiceTest {
+
     @InjectMocks
     private RegistrationService service;
     @Mock

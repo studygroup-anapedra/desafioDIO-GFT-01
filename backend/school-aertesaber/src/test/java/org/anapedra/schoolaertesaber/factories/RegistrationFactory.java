@@ -17,11 +17,6 @@ public static Registration createRegistration() {
 
 
 
-    public static Registration createRegistrationExistCpf() {
-        Registration registration = new Registration(1L, RegistrationType.EMPLOYEE_REGISTRATION,"Ana Lucia",
-                "Lopes de Santana","01589021576","ana@gmail.com", LocalDate.parse("1980-10-10"),"230406755","Professora","");
-        return registration;
-    }
 
 
 public static RegistrationDTO createRegistrationDTO() {
@@ -29,12 +24,6 @@ public static RegistrationDTO createRegistrationDTO() {
     return new RegistrationDTO(createRegistration);
 }
 
-
-
-    public static RegistrationDTO createRegistrationExistCpfDTO() {
-        Registration createRegistration = createRegistrationExistCpf();
-        return new RegistrationDTO(createRegistration);
-    }
 
 
 
