@@ -173,6 +173,51 @@ public class RegistrationServiceTest {
 
 
 
+    @Test
+    public void deleteShouldThrowResourceNotFindExceptionWhenDoesNotExistingId() {
+        long nonExistingId = 9000000000L;
+        Mockito.doNothing().when(repository).deleteById(nonExistingId);
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            service.delete(nonExistingId);
+        });
+
+        Mockito.verify(repository, times(0)).deleteById(nonExistingId);
+    }
+
+
+
+
+    @Test
+    public void deleteShouldNothingWhenDependId() {
+        long dependId = 1L;
+        Mockito.doNothing().when(repository).deleteById(dependId);
+
+        Assertions.assertDoesNotThrow(() -> {
+            service.delete(dependId);
+        });
+
+        Mockito.verify(repository, times(0)).deleteById(dependId);
+    }
+
+
+    @Test
+    public void deleteShouldNothingWhenExistId() {
+        long existId = 1L;
+        Mockito.doNothing().when(repository).deleteById(existId);
+
+        Assertions.assertDoesNotThrow(() -> {
+            service.delete(existId);
+        });
+
+        Mockito.verify(repository, times(0)).deleteById(existId);
+    }
+
+
+
+
+
+
 
 
 }
