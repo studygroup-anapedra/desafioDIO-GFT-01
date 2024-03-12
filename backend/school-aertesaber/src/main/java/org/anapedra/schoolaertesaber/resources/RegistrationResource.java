@@ -1,7 +1,10 @@
 package org.anapedra.schoolaertesaber.resources;
 
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
+import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
 import org.anapedra.schoolaertesaber.services.RegistrationService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,6 +20,24 @@ public class RegistrationResource {
         this.service = service;
     }
 
+
+   // @GetMapping
+    public ResponseEntity<Page<RegistrationMinDTO>> findAll(
+            @RequestParam(value = "firstName",defaultValue = "") String firstName,
+            @RequestParam(value = "lastName",defaultValue = "") String lastName,
+            @RequestParam(value = "profession",defaultValue = "") String profession,
+            @RequestParam(value = "minDate",defaultValue = "") String minDate,
+            @RequestParam(value = "maxDate",defaultValue = "") String maxDate,
+            Pageable pageable) {
+        Page<RegistrationMinDTO> list = service.findAllPaged(firstName.trim(),lastName.trim(),profession.trim(),minDate,maxDate,pageable);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<RegistrationMinDTO>> findAll(Pageable pageable) {
+        Page<RegistrationMinDTO> list = service.findAllPaged(pageable);
+        return ResponseEntity.ok().body(list);
+    }
 
 
 

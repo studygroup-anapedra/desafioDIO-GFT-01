@@ -6,6 +6,7 @@ import org.anapedra.schoolaertesaber.entities.enums.RegistrationType;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -49,6 +50,12 @@ public class Registration implements Serializable {
         this.registrationPhone = registrationPhone;
         this.profession = profession;
         this.imgUrl = imgUrl;
+    }
+
+
+
+    public  int getEge() {
+        return Period.between(dateBirth, LocalDate.now()).getYears();
     }
 
     public Long getId() {

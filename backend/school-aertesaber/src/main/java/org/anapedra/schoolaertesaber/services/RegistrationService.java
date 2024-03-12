@@ -2,6 +2,7 @@ package org.anapedra.schoolaertesaber.services;
 
 import org.anapedra.schoolaertesaber.dtos.PhoneDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
+import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
 import org.anapedra.schoolaertesaber.entities.Phone;
 import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.reposirories.PhoneRepository;
@@ -10,11 +11,15 @@ import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
 import org.anapedra.schoolaertesaber.services.exceptions.ResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
+
 
 @Service
 public class RegistrationService {
@@ -27,6 +32,23 @@ public class RegistrationService {
         this.phoneRepository = phoneRepository;
     }
 
+
+
+    @Transactional(readOnly = true)
+    public Page<RegistrationMinDTO> findAllPaged(String firstName, String lastName, String profession, String minDate, String maxDate, Pageable pageable){
+        LocalDate today=LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
+        LocalDate min = minDate.isEmpty() ? today.minusDays(365) : LocalDate.parse(minDate);
+        LocalDate max= maxDate.isEmpty() ? today : LocalDate.parse(maxDate);
+        Page<Registration> page=repository.findAllRegistration(firstName,lastName,profession,min,max,pageable);
+        return page.map(RegistrationMinDTO::new);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<RegistrationMinDTO> findAllPaged(Pageable pageable) {
+        Page<Registration> list = repository.findAll(pageable);
+        return list.map(RegistrationMinDTO::new);
+    }
 
     @Transactional(readOnly = true)
     public RegistrationDTO findByCpf(String cpf) {
@@ -64,9 +86,6 @@ public class RegistrationService {
     }
 
 
-
-
-
     private void copyDtoToEntity(RegistrationDTO dto, Registration entity) {
         entity.setFirstName(dto.getFirstName());
         entity.setRegistrationType(dto.getRegistrationType());
@@ -89,5 +108,6 @@ public class RegistrationService {
 
 
     }
+
 
 }

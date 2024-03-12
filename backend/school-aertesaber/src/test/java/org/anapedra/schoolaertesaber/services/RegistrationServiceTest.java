@@ -2,6 +2,7 @@ package org.anapedra.schoolaertesaber.services;
 
 
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
+import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
 import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.factories.RegistrationFactory;
 import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
@@ -17,11 +18,14 @@ import org.mockito.Mockito;
 
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -131,16 +135,44 @@ public class RegistrationServiceTest {
 
 
     @Test
-    public void findAllShouldReturnPagedProductMinDTO() {
+    public void findAllShouldReturnPaged() {
+        Registration registration=new Registration();
+        String firstName = "";
+        String lastName = "";
+        String profession = "";
+        LocalDate min = LocalDate.parse("2012-10-10");
+        LocalDate max = LocalDate.parse("2020-10-10");
+        Pageable pageable = PageRequest.of(0, 12);
+         PageImpl<Registration> page= new PageImpl<>(List.of(registration));
+
+        Mockito.when(repository.findAllRegistration(any(), any(),any(),any(),any(),(Pageable)ArgumentMatchers.any())).thenReturn(page);
+
+        Page<RegistrationMinDTO> result = service.findAllPaged(firstName,lastName, profession, min.toString(),  max.toString(), pageable);
+
+        Assertions.assertNotNull(result);
+        assertEquals(result.getSize(), 1);
+
+    }
+
+
+
+    @Test
+    public void findAllPagedShouldReturnPage() {
+        Registration registration =new Registration();
+        PageImpl<Registration> page = new PageImpl<>(List.of(registration));
+        Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
 
         Pageable pageable = PageRequest.of(0, 12);
 
-        Page<RegistrationMinDTO> result = service.findAll(registrationName, pageable);
+        Page<RegistrationMinDTO> result = service.findAllPaged(pageable);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(result.getSize(), 1);
-        Assertions.assertEquals(result.iterator().next().getFirstName(), registrationName);
+
+        Mockito.verify(repository, times(1)).findAll(pageable);
     }
+
+
+
 
 
 }
