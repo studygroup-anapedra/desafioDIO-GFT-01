@@ -32,7 +32,7 @@ public class PhoneDTO implements Serializable {
     public PhoneDTO(Phone entity) {
         id = entity.getId();
         number = entity.getNumber();
-        phoneType = (entity.getPhoneType() == null) ? PhoneType.PERSONAL_PHONE : entity.getPhoneType();
+        phoneType = (entity.getPhoneType() == null) ? null : entity.getPhoneType();
 
     }
 

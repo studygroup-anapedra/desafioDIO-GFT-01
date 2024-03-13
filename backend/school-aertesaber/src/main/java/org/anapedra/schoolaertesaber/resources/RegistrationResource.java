@@ -1,5 +1,6 @@
 package org.anapedra.schoolaertesaber.resources;
 
+import jakarta.validation.Valid;
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
 import org.anapedra.schoolaertesaber.services.RegistrationService;
@@ -41,14 +42,14 @@ public class RegistrationResource {
 
 
 
-    @GetMapping("/{cpf}")
+    @GetMapping("/uni/{cpf}")
     public ResponseEntity<RegistrationDTO> findByCpf(@PathVariable String cpf) {
         RegistrationDTO dto = service.findByCpf(cpf);
         return ResponseEntity.ok().body(dto);
     }
 
 
-    @GetMapping(value = "/uni/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<RegistrationDTO> findById(@PathVariable Long id) {
         RegistrationDTO dto = service.findById(id);
         return ResponseEntity.ok().body(dto);
@@ -57,11 +58,19 @@ public class RegistrationResource {
 
 
     @PostMapping
-    public ResponseEntity<RegistrationDTO> insert(@RequestBody RegistrationDTO dto) {
+    public ResponseEntity<RegistrationDTO> insert(@RequestBody @Valid  RegistrationDTO dto) {
         RegistrationDTO newDto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newDto.getId()).toUri();
         return ResponseEntity.created(uri).body(newDto);
+    }
+
+
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -1,6 +1,7 @@
 package org.anapedra.schoolaertesaber.services;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
 import org.anapedra.schoolaertesaber.entities.Registration;
@@ -8,7 +9,9 @@ import org.anapedra.schoolaertesaber.factories.RegistrationFactory;
 import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
 import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
 import org.anapedra.schoolaertesaber.services.exceptions.ResourceNotFoundException;
+import org.h2.table.DataChangeDeltaTable;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -39,8 +42,30 @@ public class RegistrationServiceTest {
     @Mock
     private RegistrationRepository repository;
 
+    private long existingId, nonExistingId, dependentId;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        existingId = 1L;
+        nonExistingId = 2000000L;
+        dependentId = 2L;
+
+        Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(new Registration()));
+        Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
+
+        Mockito.when(repository.getReferenceById(existingId)).thenReturn(new Registration());
+        Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
+
+        Mockito.when(repository.existsById(existingId)).thenReturn(true);
+        Mockito.when(repository.existsById(dependentId)).thenReturn(true);
+        Mockito.when(repository.existsById(nonExistingId)).thenReturn(false);
+
+        Mockito.doNothing().when(repository).deleteById(existingId);
+        Mockito.doThrow(DataBaseException.class).when(repository).deleteById(dependentId);
 
 
+
+    }
 
 
     @Test
@@ -175,8 +200,7 @@ public class RegistrationServiceTest {
 
     @Test
     public void deleteShouldThrowResourceNotFindExceptionWhenDoesNotExistingId() {
-        long nonExistingId = 9000000000L;
-        Mockito.doNothing().when(repository).deleteById(nonExistingId);
+
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             service.delete(nonExistingId);
@@ -189,37 +213,18 @@ public class RegistrationServiceTest {
 
 
     @Test
-    public void deleteShouldNothingWhenDependId() {
-        long dependId = 1L;
-        Mockito.doNothing().when(repository).deleteById(dependId);
+    public void deleteShouldThrowDatabaseExceptionWhenDoesNotExistingId() {
+        Mockito.doNothing().when(repository).deleteById(dependentId);
 
         Assertions.assertDoesNotThrow(() -> {
-            service.delete(dependId);
+            service.delete(existingId);
         });
 
-        Mockito.verify(repository, times(0)).deleteById(dependId);
+        Mockito.verify(repository, times(0)).deleteById(nonExistingId);
     }
-
-
-    @Test
-    public void deleteShouldNothingWhenExistId() {
-        long existId = 1L;
-        Mockito.doNothing().when(repository).deleteById(existId);
-
-        Assertions.assertDoesNotThrow(() -> {
-            service.delete(existId);
-        });
-
-        Mockito.verify(repository, times(0)).deleteById(existId);
-    }
-
-
-
-
 
 
 
 
 }
-
 

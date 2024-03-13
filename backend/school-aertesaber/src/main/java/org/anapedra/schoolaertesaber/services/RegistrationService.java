@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -53,7 +54,7 @@ public class RegistrationService {
     @Transactional(readOnly = true)
     public RegistrationDTO findByCpf(String cpf) {
         Optional<Registration> obj = repository.findByCpf(cpf);
-        Registration entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+        Registration entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found!"));
         return new RegistrationDTO(entity);
 
 
@@ -64,7 +65,7 @@ public class RegistrationService {
     @Transactional(readOnly = true)
     public RegistrationDTO findById(long id) {
         Optional<Registration> obj = repository.findById(id);
-        Registration entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+        Registration entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found!"));
         return new RegistrationDTO(entity);
     }
 
@@ -84,6 +85,18 @@ public class RegistrationService {
         }
 
     }
+
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
+        repository.deleteById(id);
+
+    }
+
+
 
 
     private void copyDtoToEntity(RegistrationDTO dto, Registration entity) {
@@ -111,3 +124,7 @@ public class RegistrationService {
 
 
 }
+
+
+
+

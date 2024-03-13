@@ -2,7 +2,7 @@ package org.anapedra.schoolaertesaber.services;
 
 import org.anapedra.schoolaertesaber.dtos.PhoneDTO;
 import org.anapedra.schoolaertesaber.entities.Phone;
-import org.anapedra.schoolaertesaber.entities.Registration;
+
 import org.anapedra.schoolaertesaber.reposirories.PhoneRepository;;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -32,8 +32,9 @@ public class Registration implements Serializable {
     private Instant registrationAt;
     private Instant updateAt;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE})
     private Set<Phone>phones=new HashSet<>();
+    //CascadeType.PERSIST, CascadeType.MERGE,
 
     public Registration() {
     }
