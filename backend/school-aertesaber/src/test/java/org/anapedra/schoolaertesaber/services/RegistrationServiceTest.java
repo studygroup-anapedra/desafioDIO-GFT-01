@@ -101,9 +101,6 @@ public class RegistrationServiceTest {
         Mockito.verify(repository, times(0)).findByCpf(registrationDTO.getCpf());
 
 
-
-
-
     }
 
 
@@ -198,6 +195,9 @@ public class RegistrationServiceTest {
 
 
 
+
+
+
     @Test
     public void deleteShouldThrowResourceNotFindExceptionWhenDoesNotExistingId() {
 
@@ -221,6 +221,21 @@ public class RegistrationServiceTest {
         });
 
         Mockito.verify(repository, times(0)).deleteById(nonExistingId);
+    }
+
+
+    @Test
+    public void updateShouldThrowResourceNotFindExceptionWhenIdDoesNotExit() throws Exception{
+        Registration registrationPeople=new Registration();
+        RegistrationDTO registrationPeopleDTO= RegistrationFactory.createRegistrationDTO();
+
+        Mockito.doThrow(ResourceNotFoundException.class).when(repository).save(registrationPeople);
+        Assertions.assertThrows(ResourceNotFoundException.class,() -> {
+            service.update(nonExistingId,registrationPeopleDTO);
+        });
+
+        Mockito.verify(repository, times(1)).findById(registrationPeopleDTO.getId());
+
     }
 
 
