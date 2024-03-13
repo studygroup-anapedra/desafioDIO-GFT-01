@@ -1,6 +1,7 @@
 package org.anapedra.schoolaertesaber.factories;
 
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
+import org.anapedra.schoolaertesaber.dtos.RegistrationUpdateDTO;
 import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.entities.enums.RegistrationType;
 
@@ -17,6 +18,12 @@ public static Registration createRegistration() {
 
 
 
+    public static Registration updateRegistration() {
+        Registration registration = new Registration(1L, RegistrationType.EMPLOYEE_REGISTRATION,"Ana Lucia",
+                "Lopes de Santana","ana@gmail.com", LocalDate.parse("1980-10-10"),"230406755","Professora","");
+        return registration;
+    }
+
 
 
 public static RegistrationDTO createRegistrationDTO() {
@@ -25,7 +32,10 @@ public static RegistrationDTO createRegistrationDTO() {
 }
 
 
+    public static RegistrationUpdateDTO createRegistrationUpdateDTO() {
+    Registration updateRegistration = updateRegistration();
+            return new RegistrationUpdateDTO(updateRegistration);
 
-
+    }
 }
 

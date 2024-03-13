@@ -1,17 +1,16 @@
 package org.anapedra.schoolaertesaber.services;
 
 
-import jakarta.persistence.EntityNotFoundException;
+
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
+import org.anapedra.schoolaertesaber.dtos.RegistrationUpdateDTO;
 import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.factories.RegistrationFactory;
 import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
 import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
 import org.anapedra.schoolaertesaber.services.exceptions.ResourceNotFoundException;
-import org.h2.table.DataChangeDeltaTable;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -42,34 +41,10 @@ public class RegistrationServiceTest {
     @Mock
     private RegistrationRepository repository;
 
-    private long existingId, nonExistingId, dependentId;
-
-    @BeforeEach
-    void setUp() throws Exception {
-        existingId = 1L;
-        nonExistingId = 2000000L;
-        dependentId = 2L;
-
-        Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(new Registration()));
-        Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
-
-        Mockito.when(repository.getReferenceById(existingId)).thenReturn(new Registration());
-        Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
-
-        Mockito.when(repository.existsById(existingId)).thenReturn(true);
-        Mockito.when(repository.existsById(dependentId)).thenReturn(true);
-        Mockito.when(repository.existsById(nonExistingId)).thenReturn(false);
-
-        Mockito.doNothing().when(repository).deleteById(existingId);
-        Mockito.doThrow(DataBaseException.class).when(repository).deleteById(dependentId);
-
-
-
-    }
-
 
     @Test
     public void  insertShouldSaveObjectWhenCorrectDate(){
+
         when(repository.save(ArgumentMatchers.any())).thenReturn(RegistrationFactory.createRegistration());
 
         service.insert(RegistrationFactory.createRegistrationDTO());
@@ -87,10 +62,9 @@ public class RegistrationServiceTest {
     @Test
     public void  insertShouldThrowsDataBaseExceptionWhenExistingCpf(){
 
-        Registration registration =new Registration();
         RegistrationDTO registrationDTO = new RegistrationDTO();
 
-        doThrow(DataBaseException.class).when(repository).save(registration);
+        doThrow(DataBaseException.class).when(repository).save(new Registration());
         Assertions.assertThrows(DataBaseException.class,() -> {
             service.insert(registrationDTO);
         });
@@ -103,69 +77,61 @@ public class RegistrationServiceTest {
 
     }
 
-
     @Test
     public void findByCpfShouldReturnRegistrationWhenExistingCpf() {
-        Registration registrationPeople =new Registration();
-        RegistrationDTO registrationDTO = RegistrationFactory.createRegistrationDTO();
-        Mockito.when(repository.findById(registrationDTO.getId())).thenReturn(Optional.of(registrationPeople));
+         String existCpf = "01589021576";
 
-        Optional<RegistrationDTO> result = Optional.ofNullable(service.findById(registrationDTO.getId()));
+        RegistrationDTO dto = RegistrationFactory.createRegistrationDTO();
+        Mockito.when(repository.findByCpf(existCpf)).thenReturn(Optional.of(new Registration()));
+
+        Optional<RegistrationDTO> result = Optional.ofNullable(service.findByCpf(existCpf));
 
         Assertions.assertTrue(result.isPresent());
         Assertions.assertNotNull(result);
-        assertEquals( "Ana Lucia", registrationDTO.getFirstName());
-        assertEquals("785.925.970-21",registrationDTO.getCpf());
-        assertEquals( "ana@gmail.com", registrationDTO.getRegistrationEmail());
+        assertEquals( "Ana Lucia", dto.getFirstName());
+        assertEquals("785.925.970-21",dto.getCpf());
+        assertEquals( "ana@gmail.com", dto.getRegistrationEmail());
 
-        Mockito.verify(repository, times(1)).findById(registrationDTO.getId());
+        Mockito.verify(repository, times(1)).findByCpf(existCpf);
     }
 
 
     @Test
     public void findByCpfThrowResourceNotFindExceptionWhenDoesNotExistingCpf() throws Exception{
-
-
-        RegistrationDTO registrationDTO = RegistrationFactory.createRegistrationDTO();
-        registrationDTO.setCpf("623.662.420-85");
-        Mockito.when(repository.getById(registrationDTO.getId())).thenThrow(ResourceNotFoundException.class);
+         String nonExistCpf = "731.160.100-21";
+        Mockito.when(repository.findByCpf(nonExistCpf)).thenThrow(ResourceNotFoundException.class);
 
         Assertions.assertThrows(ResourceNotFoundException.class,() -> {
-            service.findByCpf(registrationDTO.getCpf());
+            service.findByCpf(nonExistCpf);
         });
 
-        Mockito.verify(repository, times(1)).findByCpf(registrationDTO.getCpf());//@@
+        Mockito.verify(repository, times(1)).findByCpf(nonExistCpf);
 
     }
 
 
     @Test
     public void findBIdThrowResourceNotFindExceptionWhenDoesNotExistingId() throws Exception{
-
-
-        RegistrationDTO registrationDTO = RegistrationFactory.createRegistrationDTO();
-        registrationDTO.setId(100L);
+        long  nonExistId = 2000000L;
+        Mockito.doThrow(ResourceNotFoundException.class).when(repository).findById(nonExistId);
 
         Assertions.assertThrows(ResourceNotFoundException.class,() -> {
-            service.findById(registrationDTO.getId());
+            service.findById(nonExistId);
         });
 
-        Mockito.verify(repository, times(1)).findById(registrationDTO.getId());//@@
+        Mockito.verify(repository, times(1)).findById(nonExistId);
 
     }
 
-
-
     @Test
     public void findAllShouldReturnPaged() {
-        Registration registration=new Registration();
         String firstName = "";
         String lastName = "";
         String profession = "";
         LocalDate min = LocalDate.parse("2012-10-10");
         LocalDate max = LocalDate.parse("2020-10-10");
         Pageable pageable = PageRequest.of(0, 12);
-         PageImpl<Registration> page= new PageImpl<>(List.of(registration));
+         PageImpl<Registration> page= new PageImpl<>(List.of(new Registration()));
 
         Mockito.when(repository.findAllRegistration(any(), any(),any(),any(),any(),(Pageable)ArgumentMatchers.any())).thenReturn(page);
 
@@ -176,12 +142,10 @@ public class RegistrationServiceTest {
 
     }
 
-
-
     @Test
     public void findAllPagedShouldReturnPage() {
-        Registration registration =new Registration();
-        PageImpl<Registration> page = new PageImpl<>(List.of(registration));
+
+        PageImpl<Registration> page = new PageImpl<>(List.of(new Registration()));
         Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
 
         Pageable pageable = PageRequest.of(0, 12);
@@ -193,53 +157,70 @@ public class RegistrationServiceTest {
         Mockito.verify(repository, times(1)).findAll(pageable);
     }
 
-
-
-
-
-
     @Test
     public void deleteShouldThrowResourceNotFindExceptionWhenDoesNotExistingId() {
 
+        long  nonExistId = 2000000L;
+        Mockito.doThrow(ResourceNotFoundException.class).when(repository).deleteById(nonExistId);
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            service.delete(nonExistingId);
+            service.delete(nonExistId);
         });
 
-        Mockito.verify(repository, times(0)).deleteById(nonExistingId);
+        Mockito.verify(repository, times(0)).deleteById(nonExistId);
     }
 
-
-
-
     @Test
-    public void deleteShouldThrowDatabaseExceptionWhenDoesNotExistingId() {
-        Mockito.doNothing().when(repository).deleteById(dependentId);
+    public void deleteShouldNoThingWhenDoesExistingId() {
+        Long existId = 1L;
+        Mockito.when(repository.existsById(existId)).thenReturn(true);
+        Mockito.doNothing().when(repository).deleteById(existId);
+
 
         Assertions.assertDoesNotThrow(() -> {
-            service.delete(existingId);
+            service.delete(existId);
         });
 
-        Mockito.verify(repository, times(0)).deleteById(nonExistingId);
+        Mockito.verify(repository, times(1)).deleteById(existId);
     }
-
 
     @Test
-    public void updateShouldThrowResourceNotFindExceptionWhenIdDoesNotExit() throws Exception{
-        Registration registrationPeople=new Registration();
-        RegistrationDTO registrationPeopleDTO= RegistrationFactory.createRegistrationDTO();
+    public void updateShouldReturnRegistrationDTOWhenIdExists() {
+        Long existingId = 1L;
+        Mockito.when(repository.getReferenceById(existingId)).thenReturn(new Registration());
 
-        Mockito.doThrow(ResourceNotFoundException.class).when(repository).save(registrationPeople);
-        Assertions.assertThrows(ResourceNotFoundException.class,() -> {
-            service.update(nonExistingId,registrationPeopleDTO);
-        });
+        when(repository.save(ArgumentMatchers.any())).thenReturn(RegistrationFactory.createRegistration());
 
-        Mockito.verify(repository, times(1)).findById(registrationPeopleDTO.getId());
+        service.update(existingId,RegistrationFactory.createRegistrationUpdateDTO());
+
+        Optional<Registration> result = repository.findById(RegistrationFactory.updateRegistration().getId());
+
+        Assertions.assertNotNull(result);
+        assertEquals( "Ana Lucia", RegistrationFactory.createRegistrationDTO().getFirstName());
+        assertEquals("785.925.970-21",RegistrationFactory.createRegistrationDTO().getCpf());
+        assertEquals( "ana@gmail.com", RegistrationFactory.createRegistrationDTO().getRegistrationEmail());
+
+        Mockito.verify(repository, times(1)).findById(RegistrationFactory.createRegistrationUpdateDTO().getId());
 
     }
+
+    @Test
+    public void updateShouldReturnResourceNotFoundExceptionWhenIdDoesNotExist() {
+        long  nonExistingId = 2000000L;
+        Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
+        RegistrationUpdateDTO dto= RegistrationFactory.createRegistrationUpdateDTO();
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            service.update(nonExistingId, dto);
+        });
+    }
+
+
+
+
+
 
 
 
 
 }
-

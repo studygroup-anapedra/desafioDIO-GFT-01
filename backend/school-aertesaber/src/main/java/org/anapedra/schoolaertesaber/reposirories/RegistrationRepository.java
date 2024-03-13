@@ -23,5 +23,8 @@ public interface RegistrationRepository extends JpaRepository<Registration,Long>
             Page<Registration> findAllRegistration(String firstName, String lastName, String profession, LocalDate min,LocalDate max,Pageable pageable);
 
 
+    boolean existsByCpf(String cpf);
 
+
+    String getReferenceByCpf(String cpf);
 }

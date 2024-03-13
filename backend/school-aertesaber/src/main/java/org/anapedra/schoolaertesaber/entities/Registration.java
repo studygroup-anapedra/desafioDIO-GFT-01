@@ -54,6 +54,18 @@ public class Registration implements Serializable {
     }
 
 
+    public Registration(Long id, RegistrationType registrationType, String firstName, String lastName,  String registrationEmail,
+                        LocalDate dateBirth, String registrationPhone, String profession, String imgUrl) {
+        this.id = id;
+        setRegistrationType(registrationType);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.registrationEmail = registrationEmail;
+        this.dateBirth = dateBirth;
+        this.registrationPhone = registrationPhone;
+        this.profession = profession;
+        this.imgUrl = imgUrl;
+    }
 
     public  int getEge() {
         return Period.between(dateBirth, LocalDate.now()).getYears();

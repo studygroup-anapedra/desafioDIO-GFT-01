@@ -3,6 +3,7 @@ package org.anapedra.schoolaertesaber.resources;
 import jakarta.validation.Valid;
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
+import org.anapedra.schoolaertesaber.dtos.RegistrationUpdateDTO;
 import org.anapedra.schoolaertesaber.services.RegistrationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,7 +66,11 @@ public class RegistrationResource {
         return ResponseEntity.created(uri).body(newDto);
     }
 
-
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<RegistrationUpdateDTO> update(@PathVariable Long id, @RequestBody RegistrationUpdateDTO dto) {
+        dto = service.update(id,dto);
+        return ResponseEntity.ok().body(dto);
+    }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
