@@ -1,6 +1,7 @@
 package org.anapedra.schoolaertesaber.dtos;
 
 import jakarta.validation.constraints.NotEmpty;
+import org.anapedra.schoolaertesaber.entities.Phone;
 import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.entities.enums.RegistrationType;
 import org.hibernate.validator.constraints.br.CPF;
@@ -8,6 +9,8 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegistrationMinDTO implements Serializable {
     private static final long serialVersionUID=1L;
@@ -23,13 +26,14 @@ public class RegistrationMinDTO implements Serializable {
     private String registrationPhone;
     private String profession;
     private String imgUrl;
-    private  Instant registrationAt;
+
+
 
 
 
     public RegistrationMinDTO(Registration entity) {
         id = entity.getId();
-        registrationType =(registrationType == null) ? null: entity.getRegistrationType();
+        registrationType =(entity.getRegistrationType() == null) ? null: entity.getRegistrationType();
         firstName = entity.getFirstName();
         lastName = entity.getLastName();
         cpf = entity.getCpf();
@@ -37,7 +41,7 @@ public class RegistrationMinDTO implements Serializable {
         registrationPhone = entity.getRegistrationPhone();
         profession = entity.getProfession();
         imgUrl = entity.getImgUrl();
-        registrationAt = entity.getRegistrationAt();
+
 
 
 
@@ -82,11 +86,6 @@ public class RegistrationMinDTO implements Serializable {
         return imgUrl;
     }
 
-    public Instant getRegistrationAt() {
-        return registrationAt;
-    }
 
-    public void setRegistrationAt(Instant registrationAt) {
-        this.registrationAt = registrationAt;
-    }
+
 }

@@ -32,6 +32,7 @@ public class RegistrationDTO implements Serializable {
     private String profession;
     private String imgUrl;
     private Instant registrationAt;
+    private  Instant update;
 
     private List<PhoneDTO> phones =new ArrayList<>();
 
@@ -55,8 +56,7 @@ public class RegistrationDTO implements Serializable {
 
     public RegistrationDTO(Registration entity) {
         id = entity.getId();
-        registrationType =(registrationType == null) ? null: entity.getRegistrationType();
-        firstName = entity.getFirstName();
+        registrationType =(entity.getRegistrationType() == null) ? null: entity.getRegistrationType();        firstName = entity.getFirstName();
         lastName = entity.getLastName();
         cpf = entity.getCpf();
         registrationEmail = entity.getRegistrationEmail();
@@ -65,6 +65,8 @@ public class RegistrationDTO implements Serializable {
         profession = entity.getProfession();
         imgUrl = entity.getImgUrl();
         registrationAt=Instant.now();
+        update=entity.getRegistrationAt();
+        entity.getPhones().forEach(phone -> this.phones.add(new PhoneDTO(phone)));
 
 
     }
@@ -165,6 +167,10 @@ public class RegistrationDTO implements Serializable {
 
     public List<PhoneDTO> getPhones() {
         return phones;
+    }
+
+    public Instant getUpdate() {
+        return update;
     }
 
     public void setPhones(List<PhoneDTO> phones) {

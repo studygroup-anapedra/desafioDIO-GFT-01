@@ -11,7 +11,6 @@ import org.anapedra.schoolaertesaber.reposirories.PhoneRepository;
 import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
 import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
 import org.anapedra.schoolaertesaber.services.exceptions.ResourceNotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -92,8 +91,6 @@ public class RegistrationService {
         try {
             Registration entity = repository.getReferenceById(id);
             copyDtoToEntityUpdate(dto, entity);
-            entity.setUpdateAt(Instant.now());
-            entity.setRegistrationAt(entity.getRegistrationAt());
             entity = repository.save(entity);
             return new RegistrationUpdateDTO(entity);
         }

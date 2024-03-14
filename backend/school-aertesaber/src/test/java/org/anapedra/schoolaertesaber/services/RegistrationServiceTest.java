@@ -1,11 +1,10 @@
 package org.anapedra.schoolaertesaber.services;
 
-
-
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationUpdateDTO;
 import org.anapedra.schoolaertesaber.entities.Registration;
+import org.anapedra.schoolaertesaber.entities.enums.RegistrationType;
 import org.anapedra.schoolaertesaber.factories.RegistrationFactory;
 import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
 import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
@@ -82,7 +81,7 @@ public class RegistrationServiceTest {
          String existCpf = "01589021576";
 
         RegistrationDTO dto = RegistrationFactory.createRegistrationDTO();
-        Mockito.when(repository.findByCpf(existCpf)).thenReturn(Optional.of(new Registration()));
+        Mockito.when(repository.findByCpf(existCpf)).thenReturn(Optional.of(RegistrationFactory.createRegistration()));
 
         Optional<RegistrationDTO> result = Optional.ofNullable(service.findByCpf(existCpf));
 
@@ -93,6 +92,26 @@ public class RegistrationServiceTest {
         assertEquals( "ana@gmail.com", dto.getRegistrationEmail());
 
         Mockito.verify(repository, times(1)).findByCpf(existCpf);
+    }
+
+
+    @Test
+    public void findByIdShouldReturnRegistrationWhenExistingId() {
+        long existId = 1L;
+
+
+        RegistrationDTO dto = RegistrationFactory.createRegistrationDTO();
+        Mockito.when(repository.findById(existId)).thenReturn(Optional.of(RegistrationFactory.createRegistration()));
+
+        Optional<RegistrationDTO> result = Optional.ofNullable(service.findById(existId));
+
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertNotNull(result);
+        assertEquals( "Ana Lucia", dto.getFirstName());
+        assertEquals("785.925.970-21",dto.getCpf());
+        assertEquals( "ana@gmail.com", dto.getRegistrationEmail());
+
+        Mockito.verify(repository, times(1)).findById(existId);
     }
 
 
@@ -131,7 +150,7 @@ public class RegistrationServiceTest {
         LocalDate min = LocalDate.parse("2012-10-10");
         LocalDate max = LocalDate.parse("2020-10-10");
         Pageable pageable = PageRequest.of(0, 12);
-         PageImpl<Registration> page= new PageImpl<>(List.of(new Registration()));
+         PageImpl<Registration> page= new PageImpl<>(List.of(RegistrationFactory.createRegistration()));
 
         Mockito.when(repository.findAllRegistration(any(), any(),any(),any(),any(),(Pageable)ArgumentMatchers.any())).thenReturn(page);
 
@@ -145,7 +164,7 @@ public class RegistrationServiceTest {
     @Test
     public void findAllPagedShouldReturnPage() {
 
-        PageImpl<Registration> page = new PageImpl<>(List.of(new Registration()));
+        PageImpl<Registration> page = new PageImpl<>(List.of(RegistrationFactory.createRegistration()));
         Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
 
         Pageable pageable = PageRequest.of(0, 12);
@@ -199,6 +218,9 @@ public class RegistrationServiceTest {
         assertEquals( "Ana Lucia", RegistrationFactory.createRegistrationDTO().getFirstName());
         assertEquals("785.925.970-21",RegistrationFactory.createRegistrationDTO().getCpf());
         assertEquals( "ana@gmail.com", RegistrationFactory.createRegistrationDTO().getRegistrationEmail());
+        assertEquals( RegistrationType.EMPLOYEE_REGISTRATION, RegistrationFactory.createRegistrationDTO().getRegistrationType());
+
+
 
         Mockito.verify(repository, times(1)).findById(RegistrationFactory.createRegistrationUpdateDTO().getId());
 

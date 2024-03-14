@@ -11,6 +11,8 @@ public class PhoneDTO implements Serializable {
     @Serial
     private static final long serialVersionUID=1L;
 
+
+
     private Long id;
 
     private String number;
@@ -18,9 +20,8 @@ public class PhoneDTO implements Serializable {
 
 
 
-    public PhoneDTO() {
 
-    }
+
 
     public PhoneDTO(Long id, String number, PhoneType phoneType) {
         this.id = id;
@@ -30,9 +31,11 @@ public class PhoneDTO implements Serializable {
     }
 
     public PhoneDTO(Phone entity) {
+
         id = entity.getId();
         number = entity.getNumber();
-        phoneType = (entity.getPhoneType() == null) ? null : entity.getPhoneType();
+        phoneType = (entity.getPhoneType() == null) ? null: entity.getPhoneType();
+
 
     }
 
@@ -59,5 +62,9 @@ public class PhoneDTO implements Serializable {
     public void setPhoneType(PhoneType phoneType) {
         this.phoneType = phoneType;
     }
+
+
+
+
 
 }

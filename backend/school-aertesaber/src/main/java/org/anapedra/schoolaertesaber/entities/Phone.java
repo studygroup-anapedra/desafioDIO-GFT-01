@@ -50,10 +50,9 @@ public class Phone implements Serializable {
         return PhoneType.valueOf(phoneType);
     }
 
-
     public void setPhoneType(PhoneType phoneType) {
         if (phoneType != null){
-            this.phoneType= phoneType.getCode();
+            this.phoneType = phoneType.getCode();
         }
     }
 
