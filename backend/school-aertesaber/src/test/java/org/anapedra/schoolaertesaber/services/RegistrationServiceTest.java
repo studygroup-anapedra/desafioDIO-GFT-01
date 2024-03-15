@@ -202,7 +202,23 @@ public class RegistrationServiceTest {
         });
 
         Mockito.verify(repository, times(1)).deleteById(existId);
+
     }
+    @Test
+    public void deleteShouldThrowDatabaseExceptionWhenDoesNotExistingId() {
+        Long dependentId = 1L;
+        Mockito.when(repository.existsById(dependentId)).thenReturn(true);
+        Mockito.doThrow(DataBaseException.class).when(repository).deleteById(dependentId);
+
+
+
+        Assertions.assertThrows(DataBaseException.class, () -> {
+            service.delete(dependentId);
+        });
+
+        Mockito.verify(repository, times(1)).deleteById(dependentId);
+    }
+
 
     @Test
     public void updateShouldReturnRegistrationDTOWhenIdExists() {
