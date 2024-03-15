@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -29,10 +32,21 @@ public class PhoneService {
 
 
     @Transactional(readOnly = true)
+    public Page<PhoneGetDTO> findAllPaged(String firstName, String lastName, String profession, String minDate, String maxDate, Pageable pageable){
+        LocalDate today=LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
+        LocalDate min = minDate.isEmpty() ? today.minusDays(365) : LocalDate.parse(minDate);
+        LocalDate max= maxDate.isEmpty() ? today : LocalDate.parse(maxDate);
+        Page<Phone> page=repository.findAllPhone(firstName,lastName,profession,min,max,pageable);
+        return page.map(PhoneGetDTO::new);
+    }
+
+    @Transactional(readOnly = true)
     public Page<PhoneGetDTO> findAllPaged(Pageable pageable) {
         Page<Phone> list = repository.findAll(pageable);
         return list.map(PhoneGetDTO::new);
     }
+
+
 
     @Transactional(readOnly = true)
     public PhoneGetDTO findById(Long id) {
@@ -52,9 +66,6 @@ public class PhoneService {
         return new PhoneDTO(entity);
 
     }
-
-
-
 
     @Transactional
     public PhoneDTO update(Long id, PhoneDTO dto) {
@@ -83,8 +94,6 @@ public class PhoneService {
     }
 
 
-
-
     private void copyDtoToEntity(PhoneDTO dto, Phone entity) {
 
         entity.setNumber(dto.getNumber());
@@ -95,9 +104,6 @@ public class PhoneService {
         entity.setRegistration(registration);
 
 
-
-
     }
-
 
 }
