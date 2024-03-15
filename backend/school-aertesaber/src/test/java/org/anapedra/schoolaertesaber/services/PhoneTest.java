@@ -56,7 +56,7 @@ public class PhoneTest {
         assertEquals( "35264789", PhoneFactory.createPhoneDTO().getNumber());
         assertEquals(1l,PhoneFactory.createPhoneDTO().getId());
 
-        Mockito.verify(repository, times(1)).findById(RegistrationFactory.createRegistrationDTO().getId());
+        Mockito.verify(repository, times(1)).findById(PhoneFactory.createPhoneDTO().getId());
 
 
     }
@@ -217,10 +217,10 @@ public class EmailTest {
 
         Optional<Email> result = repository.findById(EmailFactory.createEmail().getId());
         Assertions.assertNotNull(result);
-        assertEquals( "35264789", PhoneFactory.createPhoneDTO().getNumber());
-        assertEquals(1l,PhoneFactory.createPhoneDTO().getId());
+        assertEquals( "ananina@gmail.com", EmailFactory.createEmailDTO().getAddressEmail());
+        assertEquals(1l,EmailFactory.createEmailDTO().getId());
 
-        Mockito.verify(repository, times(1)).findById(RegistrationFactory.createRegistrationDTO().getId());
+        Mockito.verify(repository, times(1)).findById(EmailFactory.createRegistrationDTO().getId());
 
 
     }
