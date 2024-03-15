@@ -1,62 +1,48 @@
 package org.anapedra.schoolaertesaber.services;
 
-
-import jakarta.persistence.EntityNotFoundException;
-import org.anapedra.schoolaertesaber.dtos.PhoneDTO;
-import org.anapedra.schoolaertesaber.dtos.PhoneGetDTO;
-import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
-import org.anapedra.schoolaertesaber.entities.Phone;
-import org.anapedra.schoolaertesaber.entities.Registration;
-import org.anapedra.schoolaertesaber.entities.enums.PhoneType;
-import org.anapedra.schoolaertesaber.factories.PhoneFactory;
-import org.anapedra.schoolaertesaber.factories.RegistrationFactory;
-import org.anapedra.schoolaertesaber.reposirories.PhoneRepository;
+import org.anapedra.schoolaertesaber.factories.EmailFactory;
 import org.anapedra.schoolaertesaber.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class PhoneTest {
+public class EmailTest {
 
 
     @InjectMocks
-    private PhoneService service;
+    private EmailService service;
     @Mock
-    private PhoneRepository repository;
+    private EmailRepository repository;
 
 
     @Test
     public void  insertShouldSaveObjectWhenCorrectDate(){
-        when(repository.save(ArgumentMatchers.any())).thenReturn(PhoneFactory.createPhone());
+        when(repository.save(ArgumentMatchers.any())).thenReturn(EmailFactory.createEmail());
 
-        service.insert(PhoneFactory.createPhoneDTO());
+        service.insert(EmailFactory.createEmailDTO());
 
-        Optional<Phone> result = repository.findById(PhoneFactory.createPhone().getId());
+        Optional<Email> result = repository.findById(EmailFactory.createEmail().getId());
         Assertions.assertNotNull(result);
-        assertEquals( "35264789", PhoneFactory.createPhoneDTO().getNumber());
-        assertEquals(1l,PhoneFactory.createPhoneDTO().getId());
+        assertEquals( "ananina@gmail.com", EmailFactory.createEmailDTO().getAddressEmail());
+        assertEquals(1l,EmailFactory.createEmailDTO().getId());
 
-        Mockito.verify(repository, times(1)).findById(PhoneFactory.createPhoneDTO().getId());
+        Mockito.verify(repository, times(1)).findById(EmailFactory.createEmailDTO().getId());
 
 
     }
@@ -65,12 +51,12 @@ public class PhoneTest {
 
 
     @Test
-    public void findByIdShouldReturnObjectWhenExistingId() {
+    public void findByIdShouldReturnResourceWhenExistingId() {
         long existId = 1L;
 
 
-        Mockito.when(repository.findById(existId)).thenReturn(Optional.of(PhoneFactory.createPhone()));
-        PhoneGetDTO result = service.findById(existId);
+        Mockito.when(repository.findById(existId)).thenReturn(Optional.of(EmailFactory.createEmail()));
+        EmailGetDTO result = service.findById(existId);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getId(),existId);
@@ -102,11 +88,11 @@ public class PhoneTest {
         LocalDate max = LocalDate.parse("2020-10-10");
 
         Pageable pageable = PageRequest.of(0, 12);
-        PageImpl<Phone> page= new PageImpl<>(List.of(PhoneFactory.createPhone()));
+        PageImpl<Email> page= new PageImpl<>(List.of(EmailFactory.createEmail()));
 
-        Mockito.when(repository.findAllPhone(any(), any(),any(),any(),any(),(Pageable)ArgumentMatchers.any())).thenReturn(page);
+        Mockito.when(repository.findAllEmail(any(), any(),any(),any(),any(),(Pageable)ArgumentMatchers.any())).thenReturn(page);
 
-       Page<PhoneGetDTO>result = service.findAllPaged(firstName,lastName, profession, min.toString(),max.toString(), pageable);
+       Page<EmailGetDTO>result = service.findAllPaged(firstName,lastName, profession, min.toString(),max.toString(), pageable);
         Mockito.verify(repository, times(1)).findAllPhone(any(), any(),any(),any(),any(),any());
 
 
@@ -119,12 +105,12 @@ public class PhoneTest {
     @Test
     public void findAllPagedShouldReturnPage() {
 
-        PageImpl<Phone> page = new PageImpl<>(List.of(PhoneFactory.createPhone()));
+        PageImpl<Email> page = new PageImpl<>(List.of(EmailFactory.createEmail()));
         Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
 
         Pageable pageable = PageRequest.of(0, 12);
 
-        Page<PhoneGetDTO> result = service.findAllPaged(pageable);
+        Page<EmailGetDTO> result = service.findAllPaged(pageable);
 
         Assertions.assertNotNull(result);
 
@@ -159,23 +145,23 @@ public class PhoneTest {
     }
 
     @Test
-    public void updateShouldReturnPhoneDTOWhenIdExists() {
+    public void updateShouldReturnEmailDtoWhenIdExists() {
         Long existingId = 1L;
         Mockito.when(repository.getReferenceById(existingId)).thenReturn(new Phone());
 
-        when(repository.save(ArgumentMatchers.any())).thenReturn(PhoneFactory.createPhone());
+        when(repository.save(ArgumentMatchers.any())).thenReturn(EmailFactory.createEmail());
 
-        service.update(existingId,PhoneFactory.createPhoneDTO());
+        service.update(existingId,EmailFactory.createEmailDTO());
 
-        Optional<Phone> result = repository.findById(PhoneFactory.createPhone().getId());
+        Optional<Email> result = repository.findById(EmailFactory.createEmail().getId());
 
         Assertions.assertNotNull(result);
-        assertEquals("35264789", PhoneFactory.createPhoneDTO().getNumber());
-        assertEquals(PhoneType.WORK_PHONE, PhoneFactory.createPhoneDTO().getPhoneType());
+        assertEquals( "ananina@gmail.com", EmailFactory.createEmailDTO().getAddressEmail());
+        assertEquals(EmailType.WORK_EMAIL, EmailFactory.createEmailDTO().getEmailType());
 
 
 
-        Mockito.verify(repository, times(1)).findById(PhoneFactory.createPhone().getId());
+        Mockito.verify(repository, times(1)).findById(EmailFactory.createEmail().getId());
 
     }
 
@@ -183,7 +169,7 @@ public class PhoneTest {
     public void updateShouldReturnResourceNotFoundExceptionWhenIdDoesNotExist() {
         long nonExistingId = 2000000L;
         Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
-        PhoneDTO dto= PhoneFactory.createPhoneDTO();
+        EmailDTO dto= EmailFactory.createEmailDTO();
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             service.update(nonExistingId, dto);
