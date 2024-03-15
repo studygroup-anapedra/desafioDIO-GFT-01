@@ -5,6 +5,7 @@ import org.anapedra.schoolaertesaber.entities.enums.PhoneType;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Objects;
 
 
 public class PhoneDTO implements Serializable {
@@ -17,17 +18,17 @@ public class PhoneDTO implements Serializable {
 
     private String number;
     private PhoneType phoneType;
+    private Long registrationId;
 
 
+    public PhoneDTO() {
+    }
 
-
-
-
-    public PhoneDTO(Long id, String number, PhoneType phoneType) {
+    public PhoneDTO(Long id, String number, PhoneType phoneType, Long registrationId) {
         this.id = id;
         this.number = number;
         this.phoneType = phoneType;
-
+        this.registrationId = registrationId;
     }
 
     public PhoneDTO(Phone entity) {
@@ -35,6 +36,7 @@ public class PhoneDTO implements Serializable {
         id = entity.getId();
         number = entity.getNumber();
         phoneType = (entity.getPhoneType() == null) ? null: entity.getPhoneType();
+        registrationId = entity.getRegistration().getId();
 
 
     }
@@ -63,8 +65,24 @@ public class PhoneDTO implements Serializable {
         this.phoneType = phoneType;
     }
 
+    public Long getRegistrationId() {
+        return registrationId;
+    }
 
+    public void setRegistrationId(Long registrationId) {
+        this.registrationId = registrationId;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhoneDTO phoneDTO = (PhoneDTO) o;
+        return Objects.equals(getId(), phoneDTO.getId());
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

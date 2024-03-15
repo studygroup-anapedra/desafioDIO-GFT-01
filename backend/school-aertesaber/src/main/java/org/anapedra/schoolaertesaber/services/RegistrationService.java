@@ -1,16 +1,14 @@
 package org.anapedra.schoolaertesaber.services;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.anapedra.schoolaertesaber.dtos.PhoneDTO;
-import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
-import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
-import org.anapedra.schoolaertesaber.dtos.RegistrationUpdateDTO;
+import org.anapedra.schoolaertesaber.dtos.*;
 import org.anapedra.schoolaertesaber.entities.Phone;
 import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.reposirories.PhoneRepository;
 import org.anapedra.schoolaertesaber.reposirories.RegistrationRepository;
 import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
 import org.anapedra.schoolaertesaber.services.exceptions.ResourceNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,9 +45,9 @@ public class RegistrationService {
 
 
     @Transactional(readOnly = true)
-    public Page<RegistrationMinDTO> findAllPaged(Pageable pageable) {
+    public Page<RegistrationGetIdDTO> findAllPaged(Pageable pageable) {
         Page<Registration> list = repository.findAll(pageable);
-        return list.map(RegistrationMinDTO::new);
+        return list.map(RegistrationGetIdDTO::new);
     }
 
     @Transactional(readOnly = true)
@@ -105,7 +103,12 @@ public class RegistrationService {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DataBaseException("Falha de integridade referencial");
+        }
 
     }
 
@@ -141,12 +144,14 @@ public class RegistrationService {
         entity.setProfession(dto.getProfession());
         entity.setImgUrl(dto.getImgUrl());
 
-
+       /*
         entity.getPhones().clear();
         for (PhoneDTO phoneDto : dto.getPhones()) {
             Phone phone = phoneRepository.getOne(phoneDto.getId());
             entity.getPhones().add(phone);
         }
+
+        */
 
 
 

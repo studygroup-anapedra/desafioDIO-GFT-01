@@ -2,6 +2,7 @@ package org.anapedra.schoolaertesaber.resources;
 
 import jakarta.validation.Valid;
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
+import org.anapedra.schoolaertesaber.dtos.RegistrationGetIdDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationUpdateDTO;
 import org.anapedra.schoolaertesaber.services.RegistrationService;
@@ -36,8 +37,8 @@ public class RegistrationResource {
     }
 
     @GetMapping
-    public ResponseEntity<Page<RegistrationMinDTO>> findAll(Pageable pageable) {
-        Page<RegistrationMinDTO> list = service.findAllPaged(pageable);
+    public ResponseEntity<Page<RegistrationGetIdDTO>> findAll(Pageable pageable) {
+        Page<RegistrationGetIdDTO> list = service.findAllPaged(pageable);
         return ResponseEntity.ok().body(list);
     }
 

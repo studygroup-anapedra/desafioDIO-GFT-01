@@ -2,8 +2,10 @@ package org.anapedra.schoolaertesaber.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.anapedra.schoolaertesaber.dtos.PhoneDTO;
+import org.anapedra.schoolaertesaber.dtos.PhoneGetDTO;
 import org.anapedra.schoolaertesaber.entities.Phone;
 
+import org.anapedra.schoolaertesaber.entities.Registration;
 import org.anapedra.schoolaertesaber.reposirories.PhoneRepository;;
 import org.anapedra.schoolaertesaber.services.exceptions.DataBaseException;
 import org.anapedra.schoolaertesaber.services.exceptions.ResourceNotFoundException;
@@ -27,16 +29,16 @@ public class PhoneService {
 
 
     @Transactional(readOnly = true)
-    public Page<PhoneDTO> findAllPaged(Pageable pageable) {
+    public Page<PhoneGetDTO> findAllPaged(Pageable pageable) {
         Page<Phone> list = repository.findAll(pageable);
-        return list.map(PhoneDTO::new);
+        return list.map(PhoneGetDTO::new);
     }
 
     @Transactional(readOnly = true)
-    public PhoneDTO findById(Long id) {
+    public PhoneGetDTO findById(Long id) {
         Optional<Phone> obj = repository.findById(id);
         Phone entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-        return new PhoneDTO(entity);
+        return new PhoneGetDTO(entity);
     }
 
 
@@ -87,6 +89,10 @@ public class PhoneService {
 
         entity.setNumber(dto.getNumber());
         entity.setPhoneType(dto.getPhoneType());
+
+        Registration registration= new Registration();
+        registration.setId(dto.getRegistrationId());
+        entity.setRegistration(registration);
 
 
 

@@ -1,6 +1,7 @@
 package org.anapedra.schoolaertesaber.services;
 
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
+import org.anapedra.schoolaertesaber.dtos.RegistrationGetIdDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationMinDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationUpdateDTO;
 import org.anapedra.schoolaertesaber.entities.Registration;
@@ -169,7 +170,7 @@ public class RegistrationServiceTest {
 
         Pageable pageable = PageRequest.of(0, 12);
 
-        Page<RegistrationMinDTO> result = service.findAllPaged(pageable);
+        Page<RegistrationGetIdDTO> result = service.findAllPaged(pageable);
 
         Assertions.assertNotNull(result);
 

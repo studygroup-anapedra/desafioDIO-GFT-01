@@ -35,23 +35,27 @@ public class SchoolAertesaberApplication implements CommandLineRunner {
         List<Phone>phones = new ArrayList<>();
 
 
-        Phone p1 = new Phone(1L,"23564789", PhoneType.HOME_PHONE);
-        Phone p2 = new Phone(2L,"23564789", PhoneType.WORK_PHONE);
-        Phone p3 = new Phone(3L,"23564789", PhoneType.HOME_PHONE);
-        Phone p4 = new Phone(4L,"23564789", PhoneType.MOBILE_PHONE);
+
+
+
+        Registration r1 = new Registration(1L, RegistrationType.EMPLOYEE_REGISTRATION,"Carla","Madonça","01589021576","carla@gmail.com", LocalDate.parse("1980-10-10"),"61987564","profewssora","");
+      //  r1.getPhones().addAll(Arrays.asList(p2,p3));
+
+        Registration r2 = new Registration(2L, RegistrationType.EMPLOYEE_REGISTRATION,"Maria","Madonça","929.174.970-25","carla@gmail.com", LocalDate.parse("1980-10-10"),"61987564","profewssora","");
+       // r2.getPhones().addAll(Arrays.asList(p1,p4));
+
+        registrations.addAll(Arrays.asList(r1,r2));
+        registrationRepository.saveAll(registrations);
+
+        Phone p1 = new Phone(1L,"23564789", PhoneType.HOME_PHONE,r2);
+        Phone p2 = new Phone(2L,"23564789", PhoneType.WORK_PHONE,r2);
+        Phone p3 = new Phone(3L,"23564789", PhoneType.HOME_PHONE,r2);
+        Phone p4 = new Phone(4L,"23564789", PhoneType.MOBILE_PHONE,r1);
 
         phones.addAll(Arrays.asList(p1,p2,p3,p4));
         phoneRepository.saveAll(phones);
 
 
-        Registration r1 = new Registration(1L, RegistrationType.EMPLOYEE_REGISTRATION,"Carla","Madonça","01589021576","carla@gmail.com", LocalDate.parse("1980-10-10"),"61987564","profewssora","");
-        r1.getPhones().addAll(Arrays.asList(p2,p3));
-
-        Registration r2 = new Registration(2L, RegistrationType.EMPLOYEE_REGISTRATION,"Maria","Madonça","929.174.970-25","carla@gmail.com", LocalDate.parse("1980-10-10"),"61987564","profewssora","");
-        r2.getPhones().addAll(Arrays.asList(p1,p4));
-
-        registrations.addAll(Arrays.asList(r1,r2));
-        registrationRepository.saveAll(registrations);
 
 
 

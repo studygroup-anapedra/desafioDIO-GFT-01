@@ -2,6 +2,7 @@ package org.anapedra.schoolaertesaber.resources;
 
 import jakarta.validation.Valid;
 import org.anapedra.schoolaertesaber.dtos.PhoneDTO;
+import org.anapedra.schoolaertesaber.dtos.PhoneGetDTO;
 import org.anapedra.schoolaertesaber.services.PhoneService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,15 +24,15 @@ public class PhoneResource {
 
 
     @GetMapping
-    public ResponseEntity<Page<PhoneDTO>> findAll(Pageable pageable) {
-        Page<PhoneDTO> list = service.findAllPaged(pageable);
+    public ResponseEntity<Page<PhoneGetDTO>> findAll(Pageable pageable) {
+        Page<PhoneGetDTO> list = service.findAllPaged(pageable);
         return ResponseEntity.ok().body(list);
     }
 
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<PhoneDTO> findById(@PathVariable("id") Long id) {
-        PhoneDTO dto = service.findById(id);
+    public ResponseEntity<PhoneGetDTO> findById(@PathVariable("id") Long id) {
+        PhoneGetDTO dto = service.findById(id);
         return ResponseEntity.ok().body(dto);
     }
 

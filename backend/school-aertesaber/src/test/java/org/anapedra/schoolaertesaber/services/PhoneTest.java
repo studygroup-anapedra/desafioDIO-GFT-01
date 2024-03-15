@@ -3,6 +3,7 @@ package org.anapedra.schoolaertesaber.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.anapedra.schoolaertesaber.dtos.PhoneDTO;
+import org.anapedra.schoolaertesaber.dtos.PhoneGetDTO;
 import org.anapedra.schoolaertesaber.dtos.RegistrationDTO;
 import org.anapedra.schoolaertesaber.entities.Phone;
 import org.anapedra.schoolaertesaber.entities.Registration;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,37 +59,7 @@ public class PhoneTest {
 
 
     }
-    /*
-    @BeforeEach
-    void setUp() throws Exception {
-        existingOrderId = 1L;
-        nonExistingOrderId = 2L;
 
-        existingProductId = 1L;
-        nonExistingProductId = 2L;
-
-        admin = UserFactory.createCustomAdminUser(1L, "Jef");
-        client = UserFactory.createCustomClientUser(2L, "Bob");
-
-        order = OrderFactory.createOrder(client);
-
-        orderDTO = new OrderDTO(order);
-
-        product = ProductFactory.createProduct();
-        product.setId(existingProductId);
-
-        Mockito.when(repository.findById(existingOrderId)).thenReturn(Optional.of(order));
-        Mockito.when(repository.findById(nonExistingOrderId)).thenReturn(Optional.empty());
-
-        Mockito.when(productRepository.getReferenceById(existingProductId)).thenReturn(product);
-        Mockito.when(productRepository.getReferenceById(nonExistingProductId)).thenThrow(EntityNotFoundException.class);
-
-        Mockito.when(repository.save(any())).thenReturn(order);
-
-        Mockito.when(orderItemRepository.saveAll(any())).thenReturn(new ArrayList<>(order.getItems()));
-    }
-
-     */
 
 
 
@@ -97,7 +69,7 @@ public class PhoneTest {
 
 
         Mockito.when(repository.findById(existId)).thenReturn(Optional.of(PhoneFactory.createPhone()));
-        PhoneDTO result = service.findById(existId);
+        PhoneGetDTO result = service.findById(existId);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getId(),existId);
@@ -119,7 +91,7 @@ public class PhoneTest {
         Mockito.verify(repository, times(1)).findById(nonExistId);
 
     }
-/*
+
     @Test
     public void findAllShouldReturnPaged() {
         String firstName = "";
@@ -132,14 +104,17 @@ public class PhoneTest {
 
         Mockito.when(repository.findAllPhone(any(), any(),any(),any(),any(),(Pageable)ArgumentMatchers.any())).thenReturn(page);
 
-       Page<PhoneListDTO> result = service.findAllPaged(firstName,lastName, profession, min.toString(),  max.toString(), pageable);
+       Page<PhoneGetDTO> result = service.findAllPaged(firstName,lastName, profession, min.toString(),  max.toString(), pageable);
 
       Assertions.assertNotNull(result);
        assertEquals(result.getSize(), 1);
 
     }
 
- */
+
+
+
+
 
 
 
@@ -152,7 +127,7 @@ public class PhoneTest {
 
         Pageable pageable = PageRequest.of(0, 12);
 
-        Page<PhoneDTO> result = service.findAllPaged(pageable);
+        Page<PhoneGetDTO> result = service.findAllPaged(pageable);
 
         Assertions.assertNotNull(result);
 
