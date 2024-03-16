@@ -1,14 +1,19 @@
 package org.anapedra.schoolaertesaber.services;
 
+import org.anapedra.schoolaertesaber.dtos.EmailDTO;
+import org.anapedra.schoolaertesaber.dtos.EmailGetDTO;
+import org.anapedra.schoolaertesaber.entities.Email;
+import org.anapedra.schoolaertesaber.entities.enums.EmailType;
 import org.anapedra.schoolaertesaber.factories.EmailFactory;
+import org.anapedra.schoolaertesaber.reposirories.EmailRepository;
 import org.anapedra.schoolaertesaber.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +21,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
@@ -33,23 +40,20 @@ public class EmailTest {
 
     @Test
     public void  insertShouldSaveObjectWhenCorrectDate(){
-        when(repository.save(ArgumentMatchers.any())).thenReturn(EmailFactory.createEmail());
+        when(repository.save(any())).thenReturn(EmailFactory.createEmail());
 
         service.insert(EmailFactory.createEmailDTO());
 
         Optional<Email> result = repository.findById(EmailFactory.createEmail().getId());
         Assertions.assertNotNull(result);
-        assertEquals( "ananina@gmail.com", EmailFactory.createEmailDTO().getAddressEmail());
+        assertEquals( "ananina@gmail.com", EmailFactory.createEmailDTO().getEmail());
         assertEquals(1l,EmailFactory.createEmailDTO().getId());
 
         Mockito.verify(repository, times(1)).findById(EmailFactory.createEmailDTO().getId());
 
 
     }
-
-
-
-
+    
     @Test
     public void findByIdShouldReturnResourceWhenExistingId() {
         long existId = 1L;
@@ -90,10 +94,10 @@ public class EmailTest {
         Pageable pageable = PageRequest.of(0, 12);
         PageImpl<Email> page= new PageImpl<>(List.of(EmailFactory.createEmail()));
 
-        Mockito.when(repository.findAllEmail(any(), any(),any(),any(),any(),(Pageable)ArgumentMatchers.any())).thenReturn(page);
+        Mockito.when(repository.findAllEmail(any(), any(),any(),any(),any(),(Pageable) any())).thenReturn(page);
 
-       Page<EmailGetDTO>result = service.findAllPaged(firstName,lastName, profession, min.toString(),max.toString(), pageable);
-        Mockito.verify(repository, times(1)).findAllPhone(any(), any(),any(),any(),any(),any());
+       Page<EmailGetDTO> result = service.findAllPaged(firstName,lastName, profession, min.toString(),max.toString(), pageable);
+        Mockito.verify(repository, times(1)).findAllEmail(any(), any(),any(),any(),any(),any());
 
 
       Assertions.assertNotNull(result);
@@ -106,7 +110,7 @@ public class EmailTest {
     public void findAllPagedShouldReturnPage() {
 
         PageImpl<Email> page = new PageImpl<>(List.of(EmailFactory.createEmail()));
-        Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
+        Mockito.when(repository.findAll((Pageable) any())).thenReturn(page);
 
         Pageable pageable = PageRequest.of(0, 12);
 
@@ -147,16 +151,16 @@ public class EmailTest {
     @Test
     public void updateShouldReturnEmailDtoWhenIdExists() {
         Long existingId = 1L;
-        Mockito.when(repository.getReferenceById(existingId)).thenReturn(new Phone());
+        Mockito.when(repository.getReferenceById(existingId)).thenReturn(EmailFactory.createEmail());
 
-        when(repository.save(ArgumentMatchers.any())).thenReturn(EmailFactory.createEmail());
+        when(repository.save(any())).thenReturn(EmailFactory.createEmail());
 
         service.update(existingId,EmailFactory.createEmailDTO());
 
         Optional<Email> result = repository.findById(EmailFactory.createEmail().getId());
 
         Assertions.assertNotNull(result);
-        assertEquals( "ananina@gmail.com", EmailFactory.createEmailDTO().getAddressEmail());
+        assertEquals( "ananina@gmail.com", EmailFactory.createEmailDTO().getEmail());
         assertEquals(EmailType.WORK_EMAIL, EmailFactory.createEmailDTO().getEmailType());
 
 
