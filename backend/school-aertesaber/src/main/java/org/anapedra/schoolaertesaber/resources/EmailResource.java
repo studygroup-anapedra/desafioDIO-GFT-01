@@ -1,9 +1,9 @@
 package org.anapedra.schoolaertesaber.resources;
 
 import jakarta.validation.Valid;
-import org.anapedra.schoolaertesaber.dtos.PhoneDTO;
-import org.anapedra.schoolaertesaber.dtos.PhoneGetDTO;
-import org.anapedra.schoolaertesaber.services.PhoneService;
+import org.anapedra.schoolaertesaber.dtos.EmailDTO;
+import org.anapedra.schoolaertesaber.dtos.EmailGetDTO;
+import org.anapedra.schoolaertesaber.services.EmailService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -13,35 +13,33 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/phones")
-public class PhoneResource {
+@RequestMapping("/emails")
+public class EmailResource {
 
-    private final PhoneService service;
-    public PhoneResource(PhoneService service) {
+    private final EmailService service;
+    public EmailResource(EmailService service) {
         this.service = service;
     }
 
 
-
-
     @GetMapping
-    public ResponseEntity<Page<PhoneGetDTO>> findAll(Pageable pageable) {
-        Page<PhoneGetDTO> list = service.findAllPaged(pageable);
+    public ResponseEntity<Page<EmailGetDTO>> findAll(Pageable pageable) {
+        Page<EmailGetDTO> list = service.findAllPaged(pageable);
         return ResponseEntity.ok().body(list);
     }
 
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<PhoneGetDTO> findById(@PathVariable("id") Long id) {
-        PhoneGetDTO dto = service.findById(id);
+    public ResponseEntity<EmailGetDTO> findById(@PathVariable("id") Long id) {
+        EmailGetDTO dto = service.findById(id);
         return ResponseEntity.ok().body(dto);
     }
 
 
 
     @PostMapping
-    public ResponseEntity<PhoneDTO> insert(@RequestBody @Valid PhoneDTO dto) {
-        PhoneDTO newDto = service.insert(dto);
+    public ResponseEntity<EmailDTO> insert(@RequestBody @Valid EmailDTO dto) {
+        EmailDTO newDto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newDto.getId()).toUri();
         return ResponseEntity.created(uri).body(newDto);
@@ -51,8 +49,8 @@ public class PhoneResource {
 
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<PhoneDTO> update(@PathVariable Long id, @RequestBody @Valid PhoneDTO dto) {
-        PhoneDTO newDto = service.update(id, dto);
+    public ResponseEntity<EmailDTO> update(@PathVariable Long id, @RequestBody @Valid EmailDTO dto) {
+        EmailDTO newDto = service.update(id, dto);
         return ResponseEntity.ok().body(newDto);
     }
 
@@ -64,8 +62,4 @@ public class PhoneResource {
 
 
 
-
 }
-
-
-
